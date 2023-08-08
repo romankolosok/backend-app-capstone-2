@@ -1,13 +1,29 @@
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const { checkValidMenuItem, checkMenuExist} = require('./middleware')
+const menu = require("../src/views/Menu");
 
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
 const menuItemsRouter = express.Router({mergeParams:true});
 
-menuItemsRouter.get('/', checkMenuExist, (req, res, next) => {
-    db.all(`SELECT * FROM MenuItem WHERE menu_id = ${req.params.menuId}`, (err, menuItems) => {
+menuItemsRouter.param('menuItemId', (req, res, next, id) => {
+    db.get(`SELECT * FROM MenuItem WHERE id = ${Number(id)}`, (err, menuItem) => {
+        if(err) {
+            next(err)
+        } else if(!menuItem){
+            res.sendStatus(404)
+        } else {
+            req.menuItems = menuItem
+            next()
+        }
+    })
+})
+
+menuItemsRouter.get('/', (req, res, next) => {
+    db.all('SELECT * FROM MenuItem WHERE menu_id = $menuId', {
+        $menuId: req.params.menuId
+    }, (err, menuItems) => {
         if(err) {
             next(err)
         } else {
@@ -16,23 +32,48 @@ menuItemsRouter.get('/', checkMenuExist, (req, res, next) => {
     })
 })
 
-menuItemsRouter.post('/', checkMenuExist, checkValidMenuItem, (req, res, next) => {
+menuItemsRouter.post('/', checkValidMenuItem, (req, res, next) => {
     const menuItem = req.body.menuItem
-    db.run('INSERT INTO MenuItem (name, description, inventory, price, menu_id) VALUES ($name, $description, $inventory, $price, $menuId)', {
+        db.run('INSERT INTO MenuItem (name, description, inventory, price, menu_id) VALUES ($name, $description, $inventory, $price, $menuId)', {
+            $name: menuItem.name,
+            $description: menuItem.description,
+            $inventory: menuItem.inventory,
+            $price: menuItem.price,
+            $menuId: req.params.menuId
+        }, function (err) {
+            if(err) {
+                next(err)
+            } else {
+                db.get(`SELECT * FROM MenuItem WHERE id = ${this.lastID}`, (err, menuItem) => {
+                    if(err) {
+                        next(err)
+                    } else {
+                        res.status(201).json({menuItem})
+                    }
+                })
+            }
+        })
+
+})
+
+menuItemsRouter.put('/:menuItemId',   checkValidMenuItem, (req, res, next) => {
+    const menuItem = req.body.menuItem
+    db.run('UPDATE MenuItem SET name = $name, description = $description, inventory = $inventory, price = $price, menu_id = $menuId WHERE id = $id', {
         $name: menuItem.name,
-        $description: menuItem.description?menuItem.description:null,
+        $description: menuItem.description,
         $inventory: menuItem.inventory,
         $price: menuItem.price,
-        $menuId: req.params.menuId
+        $menuId: req.params.menuId,
+        $id: req.params.menuItemId
     }, function (err) {
         if(err) {
             next(err)
         } else {
-            db.get(`SELECT * FROM MenuItem WHERE id = ${this.lastID}`, (err, menuItem) => {
+            db.get(`SELECT * FROM MenuItem WHERE id = ${req.params.menuItemId}`, (err, menuItem) => {
                 if(err) {
                     next(err)
                 } else {
-                    res.status(201).json({menuItem})
+                    res.status(200).json({menuItem})
                 }
             })
         }

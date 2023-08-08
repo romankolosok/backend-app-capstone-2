@@ -996,7 +996,7 @@ describe('GET /api/menus/:menuId/menu-items', function() {
 
   it('should return a status code of 200 for valid menus', function() {
     return request(app)
-        .get('/api/menus/2/menu-items')
+        .get('/api/menus/1/menu-items')
         .expect(200);
   });
 

@@ -61,7 +61,8 @@ function seedMenuItemDatabase(done) {
                'FOREIGN KEY(`menu_id`) REFERENCES `Menu`(`id`) )');
     db.run("INSERT INTO MenuItem (id, name, description, inventory, price, menu_id) VALUES (1, 'Menu 1 Item 1 Name', 'Menu 1 Item 1 Description', 10, 2.5, 1)");
     db.run("INSERT INTO MenuItem (id, name, description, inventory, price, menu_id) VALUES (2, 'Menu 1 Item 2 Name', 'Menu 1 Item 2 Description', 20, 3, 1)");
-    db.run("INSERT INTO MenuItem (id, name, description, inventory, price, menu_id) VALUES (3, 'Menu 2 Item 1 Name', 'Menu 2 Item 1 Description', 5, 1.5, 2)", done);
+    db.run("INSERT INTO MenuItem (id, name, description, inventory, price, menu_id) VALUES (3, 'Menu 2 Item 1 Name', 'Menu 2 Item 1 Description', 60, 2, 2)");
+    db.run("INSERT INTO MenuItem (id, name, description, inventory, price, menu_id) VALUES (4, 'Menu 2 Item 2 Name', 'Menu 2 Item 2 Description', 5, 4, 2)", done);
   });
 }
 
