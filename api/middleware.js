@@ -33,4 +33,17 @@ const checkEmployeeExist = (req, res, next) => {
     })
 }
 
-module.exports = {checkEmployeeExist, checkValidEmployee, checkValidTimesheet}
+const checkValidMenu = (req, res, next) => {
+    if(!req.body.menu.title) {
+        res.sendStatus(400)
+    } else {
+        next()
+    }
+}
+
+
+module.exports = {checkEmployeeExist,
+    checkValidEmployee,
+    checkValidTimesheet,
+    checkValidMenu
+}

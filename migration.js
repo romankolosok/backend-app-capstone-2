@@ -20,4 +20,9 @@ date INTEGER NOT NULL,
 employee_id INTEGER NOT NULL,
 FOREIGN KEY(employee_id) REFERENCES Employee(id)
 )`)
+    db.run('DROP TABLE IF EXISTS Menu')
+    db.run(`CREATE TABLE IF NOT EXISTS Menu (
+id INTEGER PRIMARY KEY NOT NULL,
+title TEXT NOT NULL
+)`)
 })
