@@ -1,7 +1,6 @@
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const { checkValidMenuItem, checkMenuExist} = require('./middleware')
-const menu = require("../src/views/Menu");
 
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
@@ -76,6 +75,16 @@ menuItemsRouter.put('/:menuItemId',   checkValidMenuItem, (req, res, next) => {
                     res.status(200).json({menuItem})
                 }
             })
+        }
+    })
+})
+
+menuItemsRouter.delete('/:menuItemId', (req, res, next) => {
+    db.run(`DELETE FROM MenuItem WHERE id = ${req.params.menuItemId}`, function (err) {
+        if(err) {
+            next(err)
+        } else {
+            res.sendStatus(204)
         }
     })
 })
