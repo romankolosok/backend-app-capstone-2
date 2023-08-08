@@ -1,6 +1,7 @@
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const {checkValidMenu} = require('./middleware')
+const menuItemsRouter = require('./menuItems')
 
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
@@ -19,6 +20,7 @@ menusRouter.param('menuId', (req, res, next, id) => {
     })
 })
 
+menusRouter.use('/:menuId/menu-items', menuItemsRouter)
 menusRouter.get('/', (req, res, next) => {
     db.all('SELECT * FROM Menu', (err, menus) => {
         if(err) {

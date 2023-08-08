@@ -25,4 +25,14 @@ FOREIGN KEY(employee_id) REFERENCES Employee(id)
 id INTEGER PRIMARY KEY NOT NULL,
 title TEXT NOT NULL
 )`)
+    db.run('DROP TABLE IF EXISTS MenuItem')
+    db.run(`CREATE TABLE IF NOT EXISTS MenuItem (
+id INTEGER NOT NULL PRIMARY KEY,
+name TEXT NOT NULL,
+description TEXT,
+inventory TEXT NOT NULL,
+price INTEGER NOT NULL,
+menu_id INTEGER NOT NULL,
+FOREIGN KEY(menu_id) REFERENCES Menu(id)
+)`)
 })

@@ -41,9 +41,32 @@ const checkValidMenu = (req, res, next) => {
     }
 }
 
+const checkValidMenuItem = (req, res, next) => {
+    const menuItem = req.body.menuItem
+    if (!menuItem.name || !menuItem.inventory || !menuItem.price) {
+        res.sendStatus(400)
+    } else {
+        next()
+    }
+}
+
+const checkMenuExist = (req, res, next) => {
+        db.get(`SELECT * FROM Menu WHERE id = ${req.params.menuId}`, (err, menu) => {
+            if (err) {
+                next(err)
+            } else if (!menu) {
+                res.sendStatus(404)
+            } else {
+                next()
+            }
+        })
+}
+
 
 module.exports = {checkEmployeeExist,
     checkValidEmployee,
     checkValidTimesheet,
-    checkValidMenu
+    checkValidMenu,
+    checkValidMenuItem,
+    checkMenuExist
 }
