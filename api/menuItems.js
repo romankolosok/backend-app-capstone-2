@@ -55,7 +55,7 @@ menuItemsRouter.post('/', checkValidMenuItem, (req, res, next) => {
 
 })
 
-menuItemsRouter.put('/:menuItemId',   checkValidMenuItem, (req, res, next) => {
+menuItemsRouter.put('/:menuItemId',  checkValidMenuItem, (req, res, next) => {
     const menuItem = req.body.menuItem
     db.run('UPDATE MenuItem SET name = $name, description = $description, inventory = $inventory, price = $price, menu_id = $menuId WHERE id = $id', {
         $name: menuItem.name,

@@ -29,7 +29,7 @@ timesheetsRouter.get('/', (req, res, next) => {
     })
 })
 
-timesheetsRouter.post('/', checkEmployeeExist, checkValidTimesheet, (req, res, next) => {
+timesheetsRouter.post('/', checkValidTimesheet, (req, res, next) => {
     const timesheet = req.body.timesheet
     db.run('INSERT INTO Timesheet (hours, rate, date, employee_id) VALUES ($hours, $rate, $date, $employeeId)', {
         $hours: timesheet.hours,
@@ -51,7 +51,7 @@ timesheetsRouter.post('/', checkEmployeeExist, checkValidTimesheet, (req, res, n
     })
 })
 
-timesheetsRouter.put('/:timesheetId', checkEmployeeExist, checkValidTimesheet, (req, res, next) => {
+timesheetsRouter.put('/:timesheetId', checkValidTimesheet, (req, res, next) => {
     const timesheet = req.body.timesheet
     db.run('UPDATE Timesheet SET hours = $hours, rate = $rate, date = $date, employee_id = $employeeId WHERE id = $id', {
         $hours: timesheet.hours,
@@ -74,7 +74,7 @@ timesheetsRouter.put('/:timesheetId', checkEmployeeExist, checkValidTimesheet, (
     })
 })
 
-timesheetsRouter.delete('/:timesheetId', checkEmployeeExist, (req, res, next) => {
+timesheetsRouter.delete('/:timesheetId', (req, res, next) => {
     db.run(`DELETE FROM Timesheet WHERE id = ${req.params.timesheetId}`, function (err) {
         if(err) {
             next(err)
