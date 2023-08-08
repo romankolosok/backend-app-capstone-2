@@ -11,4 +11,13 @@ position TEXT NOT NULL,
 wage INTEGER NOT NULL,
 is_current_employee INTEGER DEFAULT 1
 )`)
+    db.run('DROP TABLE IF EXISTS Timesheet')
+    db.run(`CREATE TABLE IF NOT EXISTS Timesheet (
+id INTEGER PRIMARY KEY NOT NULL,
+hours INTEGER NOT NULL,
+rate INTEGER NOT NULL,
+date INTEGER NOT NULL,
+employee_id INTEGER NOT NULL,
+FOREIGN KEY(employee_id) REFERENCES Employee(id)
+)`)
 })
